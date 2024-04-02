@@ -7,7 +7,7 @@ var Q = require('q');
 var cors = require('cors');
 
 var app = express();
-var port = process.env.PORT || 7000;
+var port = process.env.PORT || 4500;
 var baseDir ='http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_1p00.pl';
 
 // cors config
@@ -150,11 +150,14 @@ function getGribData(targetMoment){
             return;
         }
 
-		var stamp = moment(targetMoment).format('YYYYMMDD') + roundHours(moment(targetMoment).hour(), 6);
+		//var stamp = moment(targetMoment).format('YYYYMMDD') + roundHours(moment(targetMoment).hour(), 6);
+		const day = moment(targetMoment).format('YYYYMMDD');
+		const hour = roundHours(moment(targetMoment).hour(), 6);
+		var stamp = day + hour;
 		request.get({
 			url: baseDir,
 			qs: {
-				file: 'gfs.t'+ roundHours(moment(targetMoment).hour(), 6) +'z.pgrb2.1p00.f000',
+				file: 'gfs.t'+ hour +'z.pgrb2.1p00.f000',
 				lev_10_m_above_ground: 'on',
 				lev_surface: 'on',
 				var_TMP: 'on',
@@ -164,7 +167,7 @@ function getGribData(targetMoment){
 				rightlon: 360,
 				toplat: 90,
 				bottomlat: -90,
-				dir: '/gfs.'+stamp
+				dir: `/gfs.${day}/${hour}/atmos`
 			}
 
 		}).on('error', function(err){
