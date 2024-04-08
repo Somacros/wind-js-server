@@ -241,7 +241,7 @@ function convertGribToJson(stamp, targetMoment) {
 				// Check number of files in json-data directory
 				var files = fs.readdirSync('json-data').sort().reverse();
 
-				if (!checkPath('json-data/' + prevStamp + '.json', false) && files.length < 4) {
+				if (!checkPath('json-data/' + prevStamp + '.json', false) && files.length <= 4) {
 
 					console.log("attempting to harvest older data " + stamp);
 					run(prevMoment);
